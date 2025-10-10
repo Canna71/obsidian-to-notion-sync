@@ -40,7 +40,11 @@ Copy `env.example` to `.env` and fill in the values:
 cp env.example .env   # Windows: copy env.example .env
 ```
 
-Edit `.env` in your editor:
+Edit `.env` in your editor: 
+-Go to www.notion.so/my-integrations then add a new integration and name it then copy the value into your NOTION_KEY
+-The parent page is going to be page where the Obsidian Vault is going to be sync into in Notion. You need to give its ID(Only the first 23 numbers) and then share the page as an integration (click Share then
+Click Invite and select your integration)
+
 
 ```
 NOTION_KEY=ntn_************************
