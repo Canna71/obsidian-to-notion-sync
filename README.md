@@ -1,4 +1,4 @@
-# Obsidian → Notion Sync Toolkit
+# Obsidian → Notion 
 
 Sync your local Obsidian Markdown vault to Notion. Handles attachments with Notion’s native File Upload API and supports either nested pages (mirroring folders) or databases.
 
