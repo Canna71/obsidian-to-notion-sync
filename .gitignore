@@ -10,3 +10,6 @@ sync-map.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Temp files
+temp.txt
