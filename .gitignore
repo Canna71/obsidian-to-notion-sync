@@ -1,0 +1,12 @@
+# Environment variables (contains API keys)
+.env
+
+# Dependencies
+node_modules/
+
+# Sync state
+sync-map.json
+
+# OS
+.DS_Store
+Thumbs.db

@@ -30,7 +30,8 @@
     "sync": "node sync-to-notion.js",
     "watch": "node -e \"process.env.WATCH_ON='1'; require('./sync-to-notion.js')\"",
     "cleanup": "node notion-page-cleanup.js",
-    "help": "echo 'Available commands: npm run sync, npm run cleanup'"
+    "reset": "node notion-reset.js",
+    "help": "echo 'Available commands: npm run sync, npm run cleanup, npm run reset'"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.14",

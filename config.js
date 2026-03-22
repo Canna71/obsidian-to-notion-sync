@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   // The base directory for your markdown files
-  markdownBaseDir: path.resolve('C:/Users/ftv/Documents/remotevault_paid'),
+  markdownBaseDir: path.resolve('/Users/one/Desktop/project/pipixia01'),
 
   // The name of the folder where global attachments are stored
   attachmentsDir: 'Attachments',

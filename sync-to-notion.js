@@ -219,6 +219,8 @@ async function processSingleFile(filePath, existingPages, pagesModeExtra) {
                 const b = { ...blk };
                 // Ensure object field is set
                 if (!b.object) b.object = 'block';
+                // Divider blocks require an empty divider property
+                if (b.type === 'divider' && !b.divider) b.divider = {};
                 const typed = b[b.type];
                 // Flatten list wrapper blocks from converters (bulleted_list/numbered_list)
                 if (b.type === 'bulleted_list' || b.type === 'numbered_list') {
@@ -237,39 +239,30 @@ async function processSingleFile(filePath, existingPages, pagesModeExtra) {
                 // If converter placed children under typed prop
                 if (typed && Array.isArray(typed.children)) {
                     const childBlocks = normalizeBlocks(typed.children, depth + 1);
-                    delete typed.children;
                     if (typesThatAllowChildren.has(b.type)) {
-                        b.children = childBlocks;
+                        typed.children = childBlocks;
                         out.push(b);
                     } else {
-                        // This type cannot nest children; emit current block, then its would-be children as siblings
+                        delete typed.children;
                         out.push(b);
                         out.push(...childBlocks);
                     }
                     continue;
                 }
                 if (Array.isArray(b.children) && b.children.length) {
-                    // Ensure the type-specific property exists before allowing children
+                    const childBlocks = normalizeBlocks(b.children, depth + 1);
+                    delete b.children;
                     if (!typed || typeof typed !== 'object' || Object.keys(typed).length === 0) {
-                        // Malformed block: has children but no type property
-                        // Add an empty type property to satisfy Notion API requirements
                         if (typesThatAllowChildren.has(b.type)) {
-                            b[b.type] = { rich_text: [] }; // Add minimal type property
-                            b.children = normalizeBlocks(b.children, depth + 1);
+                            b[b.type] = { rich_text: [], children: childBlocks };
                             out.push(b);
                         } else {
-                            // Cannot support children, flatten as siblings
-                            const childBlocks = normalizeBlocks(b.children, depth + 1);
-                            delete b.children;
                             out.push(b, ...childBlocks);
                         }
                     } else if (typesThatAllowChildren.has(b.type)) {
-                        b.children = normalizeBlocks(b.children, depth + 1);
+                        typed.children = childBlocks;
                         out.push(b);
                     } else {
-                        // Split unsupported nesting into siblings
-                        const childBlocks = normalizeBlocks(b.children, depth + 1);
-                        delete b.children;
                         out.push(b, ...childBlocks);
                     }
                 } else {
@@ -422,6 +415,8 @@ async function processSingleFile(filePath, existingPages, pagesModeExtra) {
                         const b = { ...blk };
                         // Ensure object field is set
                         if (!b.object) b.object = 'block';
+                        // Divider blocks require an empty divider property
+                        if (b.type === 'divider' && !b.divider) b.divider = {};
                         const typed = b[b.type];
                         if (b.type === 'bulleted_list' || b.type === 'numbered_list') {
                             const inner = (typed && Array.isArray(typed.children)) ? typed.children : [];
@@ -437,37 +432,30 @@ async function processSingleFile(filePath, existingPages, pagesModeExtra) {
                         }
                         if (typed && Array.isArray(typed.children)) {
                             const childBlocks = normalizeBlocks(typed.children, depth + 1);
-                            delete typed.children;
                             if (typesThatAllowChildren.has(b.type)) {
-                                b.children = childBlocks;
+                                typed.children = childBlocks;
                                 out.push(b);
                             } else {
+                                delete typed.children;
                                 out.push(b);
                                 out.push(...childBlocks);
                             }
                             continue;
                         }
                         if (Array.isArray(b.children) && b.children.length) {
-                            // Ensure the type-specific property exists before allowing children
+                            const childBlocks = normalizeBlocks(b.children, depth + 1);
+                            delete b.children;
                             if (!typed || typeof typed !== 'object' || Object.keys(typed).length === 0) {
-                                // Malformed block: has children but no type property
-                                // Add an empty type property to satisfy Notion API requirements
                                 if (typesThatAllowChildren.has(b.type)) {
-                                    b[b.type] = { rich_text: [] }; // Add minimal type property
-                                    b.children = normalizeBlocks(b.children, depth + 1);
+                                    b[b.type] = { rich_text: [], children: childBlocks };
                                     out.push(b);
                                 } else {
-                                    // Cannot support children, flatten as siblings
-                                    const childBlocks = normalizeBlocks(b.children, depth + 1);
-                                    delete b.children;
                                     out.push(b, ...childBlocks);
                                 }
                             } else if (typesThatAllowChildren.has(b.type)) {
-                                b.children = normalizeBlocks(b.children, depth + 1);
+                                typed.children = childBlocks;
                                 out.push(b);
                             } else {
-                                const childBlocks = normalizeBlocks(b.children, depth + 1);
-                                delete b.children;
                                 out.push(b, ...childBlocks);
                             }
                         } else {

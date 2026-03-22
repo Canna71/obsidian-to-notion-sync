@@ -61,7 +61,7 @@ DEBUG_UPLOADS=0                                    # optional (set 1 to enable)
 ```js
 module.exports = {
   // Path to your Obsidian vault
-  markdownBaseDir: 'C:/path/to/your/vault',
+  markdownBaseDir: 'xxx/xxx/xx',
 
   // Attachment folders to search (in order); also supports relative links from each .md
   attachmentsDir: 'Attachments',
@@ -134,11 +134,19 @@ The cleanup tool will:
 - `npm start` – Sync once
 - `npm run watch` – Watch mode (optional)
 - `npm run cleanup` – Cleanup helper for Notion pages
+- `npm run reset` – Archive all pages under the parent page (full wipe before re-sync)
 
 ## Notes
 
 - You can override the Notion API version with `NOTION_VERSION` (defaults to `2022-06-28`).
 - Attachments are uploaded natively to Notion; no external storage is used.
+
+## Changelog
+
+### 2026-03-23
+- **Fix**: Nested block children now placed inside the typed property (e.g. `numbered_list_item.children`) to satisfy Notion API validation — previously caused sync failures for files with nested lists
+- **Fix**: Divider blocks (`---`) now include the required empty `divider: {}` property
+- **New**: `npm run reset` command — archives all pages under the parent page for a clean full re-sync
 
 ## License
 
