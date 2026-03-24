@@ -41,6 +41,10 @@ async function buildVaultImageIndex() {
             } catch (e) { }
         }
         await walk(config.markdownBaseDir);
+        // Also index the external attachmentsDir if it's outside markdownBaseDir
+        if (config.attachmentsDir && !config.attachmentsDir.startsWith(config.markdownBaseDir)) {
+            await walk(config.attachmentsDir);
+        }
         return map;
     })();
     vaultImageIndex = await vaultIndexBuilding;
@@ -61,10 +65,10 @@ async function resolveImagePath(imagePath, markdownFilePath) {
         // Not found, proceed to next step
     }
 
-    // 2. Try resolving from any configured global attachments folders
+    // 2. Try resolving from any configured global attachments folders (relative names under markdownBaseDir)
     const dirs = Array.isArray(config.attachmentsDirs) && config.attachmentsDirs.length > 0
         ? config.attachmentsDirs
-        : [config.attachmentsDir].filter(Boolean);
+        : [];
     for (const dirName of dirs) {
         // Case A: decodedPath does NOT already start with dirName → join dirName/decodedPath
         if (!decodedPath.startsWith(dirName + '/') && !decodedPath.startsWith(dirName + '\\')) {
@@ -74,6 +78,17 @@ async function resolveImagePath(imagePath, markdownFilePath) {
         // Case B: decodedPath already includes dirName at the start → join base/decodedPath directly
         const attachmentPathB = path.join(config.markdownBaseDir, decodedPath);
         try { await fs.access(attachmentPathB); return attachmentPathB; } catch (e) {}
+    }
+
+    // 2b. Try the absolute attachmentsDir path directly (handles dirs outside markdownBaseDir)
+    if (config.attachmentsDir) {
+        const basename = path.basename(decodedPath);
+        const p1 = path.join(config.attachmentsDir, basename);
+        try { await fs.access(p1); return p1; } catch (e) {}
+        if (basename !== decodedPath) {
+            const p2 = path.join(config.attachmentsDir, decodedPath);
+            try { await fs.access(p2); return p2; } catch (e) {}
+        }
     }
 
     // 3. Vault-wide basename search

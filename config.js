@@ -2,10 +2,10 @@ const path = require('path');
 
 module.exports = {
   // The base directory for your markdown files
-  markdownBaseDir: path.resolve('/Users/one/Desktop/project/pipixia01'),
+  markdownBaseDir: path.resolve('C:\\Sviluppo\\git\\Obsidian\\General\\Personal'),
 
   // The name of the folder where global attachments are stored
-  attachmentsDir: 'Attachments',
+  attachmentsDir: path.resolve('C:\\Sviluppo\\git\\Obsidian\\General\\Attachments'),
   // Additional common global folders Obsidian users often use (checked as fallbacks)
   attachmentsDirs: ['Attachments', 'Images', 'images', 'assets', 'Pasted Images', 'Pasted images'],
 
@@ -16,7 +16,7 @@ module.exports = {
   structureMode: 'pages',
 
   // Update existing pages when source markdown changes
-  updateExisting: true,
+  updateExisting: false,
 
   // Auto watch for changes: 'off' | 'on'
   watchMode: 'off',
