@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   // The base directory for your markdown files
-  markdownBaseDir: path.resolve('C:\\Sviluppo\\git\\Obsidian\\General\\Personal'),
+  markdownBaseDir: path.resolve('C:\\Sviluppo\\git\\Obsidian\\General\\Resources\\Credentials'),
 
   // The name of the folder where global attachments are stored
   attachmentsDir: path.resolve('C:\\Sviluppo\\git\\Obsidian\\General\\Attachments'),
@@ -13,7 +13,7 @@ module.exports = {
   imageUpload: 'notion',  // Now using correct 2-step file upload API
 
   // Structure mode: 'databases' (current behavior) or 'pages' (nested pages like folders)
-  structureMode: 'pages',
+  structureMode: 'databases',
 
   // Update existing pages when source markdown changes
   updateExisting: false,
